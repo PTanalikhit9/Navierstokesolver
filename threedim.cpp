@@ -59,42 +59,29 @@ double d2wdy2(int i, int j, int k, double dy, double*** W) {
 double d2wdz2(int i, int j, int k, double dz, double*** W) {
   return (W[i][j][k+1]+W[i][j][k-1]-2*W[i][j][k])/(dz*dz);
 }
+
 //Initialization
 void INIT(double ***U, double ***V, double ***W, double ***P, double ***PHI, double ***NEW_PHI, double ***F, double ***G, double ***H, double nx, double ny, double nz, double dx, double dy, double dz, int R, int Cx, int Cy){
-  //Initialize U V
-  int n = 0;
-  for(int i = 0; i < nx; i++){
-    for(int j = 0; j < ny; j++){
-      for(int k = 0; k < nz; k++){
-	if(i == 0){U[i][j][k] = 0.5;}
-	else{U[i][j][k] = 0;}
-	V[i][j][k] = 0.0;
-	W[i][j][k] = 0.0;
-	PHI[i][j][k] = 0.0;
-	NEW_PHI[i][j][k] = 0.0;
-	P[i][j][k] = 0.0;
-	F[i][j][k] = 0.0;
-	G[i][j][k] = 0.0;
-	H[i][j][k] = 0.0;
-	n+= 1;
-	//if(n < 100){std::cout << U[i][j][k] << V[i][j][k] << W[i][j][k] << PHI[i][j][k] << NEW_PHI[i][j][k] << P[i][j][k] << F[i][j][k] << G[i][j][k] << H[i][j][k] << std::endl;}
-      }
-    }
-  }
-  n = 0;
-  std::cout << "comp" << std::endl;
-  //Initialize W
+  memset(U[0][0], 0, nx*ny*nz*sizeof(double));
+  memset(V[0][0], 0, nx*ny*nz*sizeof(double));
+  memset(W[0][0], 0, nx*ny*nz*sizeof(double));
+  memset(PHI[0][0], 0, nx*ny*nz*sizeof(double));
+  memset(NEW_PHI[0][0], 0, nx*ny*nz*sizeof(double));
+  memset(P[0][0], 0, nx*ny*nz*sizeof(double));
+  memset(F[0][0], 0, nx*ny*nz*sizeof(double));
+  memset(G[0][0], 0, nx*ny*nz*sizeof(double));
+  memset(H[0][0], 0, nx*ny*nz*sizeof(double));
+  
   for(int i = R-Cx; i <= R+Cx; i++){
     for(int j = R-Cy; j <= R+Cy; j++){
       if((i-Cx)*(i-Cx)+(j-Cy)*(j-Cy) < R*R){
 	W[i][j][0] = 1.0;
 	PHI[i][j][0] = 1.0;
-	n += 1;
-	//if(n < 100){std::cout << U[i][j][0] << V[i][j][0] << W[i][j][0] << PHI[i][j][0] << NEW_PHI[i][j][0] << P[i][j][0] << F[i][j][0] << G[i][j][0] << H[i][j][0] << std::endl;}
       }
     }
   }
 }
+//edited... need to be checked!
 
 void COMP_F(double*** F, double*** U, double*** V, double ***W, int nx, int ny, int nz, double dx, double dy, double dz, double dt, double Re, double Gx){
   int imax = nx-2; int jmax = ny-2; int kmax = nz-2;
